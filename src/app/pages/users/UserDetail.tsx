@@ -17,7 +17,7 @@ const UserDetail = () => {
       .catch((error) => console.log(error));
   }, []);
   return (
-    <Descriptions title={`Info of ${userInfo?.username}`}>
+    <Descriptions title={`This is information of ${userInfo?.username}`}>
       <Descriptions.Item label='Name'>{userInfo?.name}</Descriptions.Item>
       <Descriptions.Item label='Telephone'>{userInfo?.phone}</Descriptions.Item>
       <Descriptions.Item label='Email'>{userInfo?.email}</Descriptions.Item>

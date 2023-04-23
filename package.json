@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "preinstall": "npx npm-force-resolutions",
-    "test": "jest",
+    "test": "test",
     "start": "webpack serve --output-pathinfo --progress",
     "build": "npx webpack --env NODE_ENV=production",
     "build.dev": "npx webpack --env NODE_ENV=dev",
@@ -61,6 +61,8 @@
     "@babel/runtime-corejs3": "^7.21.0",
     "@redux-devtools/extension": "^3.2.5",
     "@svgr/webpack": "^6.5.1",
+    "@testing-library/jest-dom": "^5.16.5",
+    "@testing-library/react": "^14.0.0",
     "@types/jest": "^29.5.0",
     "@types/node": "^18.14.0",
     "@types/react": "^18.0.28",
