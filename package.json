@@ -22,6 +22,7 @@
   },
   "homepage": "https://github.com/st-fe-rd/b-react-ts#readme",
   "dependencies": {
+    "antd": "^5.4.4",
     "assert": "^2.0.0",
     "axios": "^1.3.3",
     "buffer-browserify": "^0.2.5",
