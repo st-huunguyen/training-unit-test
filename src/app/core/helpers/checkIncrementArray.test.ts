@@ -26,8 +26,11 @@ describe('CheckIncrementArray', () => {
   });
 
   describe('Input is an array', () => {
-    it('Should return false input is a empty array', () => {
+    it('Should return false because input is a empty array', () => {
       expect(checkIncrementArray([])).toBe(false);
+    });
+    it('Should return false because array has 1 element', () => {
+      expect(checkIncrementArray([1])).toBe(false);
     });
     describe('Input has an element that is not a number', () => {
       it('Should return false because array has an element is string', () => {

@@ -1,80 +1,146 @@
-import { Cart, APPLE, ORANGE, STRAWBERRY } from './cartHelper';
+import { ProductsInfo, Order, Fruit } from './cartHelper';
 
-describe('Test cart', () => {
-  const cart = new Cart();
-  beforeEach(() => {
-    cart.clearCart();
-  });
+const fruitStorage: ProductsInfo = {
+  apple: {
+    name: 'apple',
+    id: 'a1',
+    price: 25000,
+    discount: [
+      {
+        quantityApplied: 1,
+        percent: 5,
+      },
+      {
+        quantityApplied: 2,
+        percent: 10,
+      },
+    ],
+  },
+  orange: {
+    name: 'orange',
+    id: 'o1',
+    price: 20000,
+    discount: [
+      {
+        quantityApplied: 1,
+        percent: 3,
+      },
+      {
+        quantityApplied: 2,
+        percent: 7,
+      },
+    ],
+  },
+};
 
-  describe('Test addItem', () => {
-    it('Pass when the cart contains the apple just added', () => {
-      cart.addItem(APPLE);
-      expect(cart.cartItems).toContainEqual(APPLE);
+describe('Test Order Class', () => {
+  describe('Order is empty', () => {
+    const order = new Order();
+
+    it('order details should be empty', () => {
+      expect(order.getDetails().size).toBe(0);
     });
-    it('Pass when the cart contains product just added before with quantity is 2 ', () => {
-      cart.addItem(STRAWBERRY);
-      cart.addItem(STRAWBERRY);
-      expect(cart.cartItems[0].amount).toBe(2);
+
+    it('total price should be 0', () => {
+      expect(order.getTotal()).toBe(0);
     });
-    it('Pass when the cart quantity is 3 after user add 3 product', () => {
-      cart.addItem(APPLE);
-      cart.addItem(ORANGE);
-      cart.addItem(STRAWBERRY);
-      cart.addItem(STRAWBERRY);
-      const totalItem = cart.cartItems.reduce(
-        (quantity, item) => quantity + item.amount,
-        0
-      );
-      expect(totalItem).toBe(4);
-    });
-  });
-  describe('Test removeItem', () => {
-    it('Pass when cart contain 1 apple', () => {
-      cart.addItem(APPLE);
-      cart.addItem(APPLE);
-      cart.removeItem(APPLE);
-      expect(cart.cartItems).toContainEqual(APPLE);
-    });
-    it('Pass when cart contain 2 apple', () => {
-      cart.addItem(APPLE);
-      cart.addItem(APPLE);
-      cart.addItem(APPLE);
-      cart.removeItem(APPLE);
-      expect(cart.cartItems[0].amount).toBe(2);
-    });
-    it('Pass when cart not contain orange', () => {
-      cart.addItem(ORANGE);
-      cart.removeItem(ORANGE);
-      expect(cart.cartItems).not.toContainEqual(ORANGE);
-    });
-    it('Pass when cart not contain strawberry', () => {
-      cart.removeItem(STRAWBERRY);
-      expect(cart.cartItems).not.toContainEqual(STRAWBERRY);
+
+    it('export bill should be empty', () => {
+      expect(order.getBill()).toEqual([]);
     });
   });
 
-  describe('Test calculate total bill', () => {
-    it('Pass when calculate bill equal to 1 apple cost', () => {
-      cart.addItem(APPLE);
-      const appleCost = (1 * APPLE.price * (100 - APPLE.discount)) / 100;
-      expect(cart.total).toBe(appleCost);
+  describe('Order has one product', () => {
+    const order = new Order();
+
+    test('Add an apple', () => {
+      order.addFruit(new Fruit(fruitStorage.apple), 1);
+      expect(order.getDetails().size).toBe(1);
+      expect(order.getDetail(fruitStorage.apple.id)).not.toBeUndefined();
+      expect(order.getDetail(fruitStorage.apple.id).quantity).toBe(1);
     });
-    it('Pass when calculate bill equal to 2 apples cost', () => {
-      const appleAmount = 2;
-      for (let i = 0; i < appleAmount; i++) {
-        cart.addItem(APPLE);
-      }
-      const appleCost =
-        (appleAmount * APPLE.price * (100 - APPLE.extraDiscount)) / 100;
-      expect(cart.total).toBe(appleCost);
+
+    test('Total price is 23750', () => {
+      expect(order.getTotal()).toBe(23750);
     });
-    it('Pass when calculate bill equal to cost of 1 apple + 1 orange', () => {
-      cart.addItem(APPLE);
-      cart.addItem(ORANGE);
-      const appleCost = (1 * APPLE.price * (100 - APPLE.discount)) / 100;
-      const orangeCost = (1 * ORANGE.price * (100 - ORANGE.discount)) / 100;
-      const total = appleCost + orangeCost;
-      expect(cart.total).toBe(total);
+
+    test('Add more 2 apples', () => {
+      order.addFruit(new Fruit(fruitStorage.apple), 2);
+      expect(order.getDetails().size).toBe(1);
+      expect(order.getDetail(fruitStorage.apple.id)).not.toBeUndefined();
+      expect(order.getDetail(fruitStorage.apple.id).quantity).toBe(3);
+    });
+
+    test('Total price is 67500', () => {
+      expect(order.getTotal()).toBe(67500);
+    });
+
+    test('Update quantity of apple to 4', () => {
+      order.updateFruit(new Fruit(fruitStorage.apple), 4);
+      expect(order.getDetails().size).toBe(1);
+      expect(order.getDetail(fruitStorage.apple.id)).not.toBeUndefined();
+      expect(order.getDetail(fruitStorage.apple.id).quantity).toBe(4);
+    });
+
+    test('Total price is 90000', () => {
+      expect(order.getTotal()).toBe(90000);
+    });
+
+    test('Remove apple in order', () => {
+      order.removeFruit(fruitStorage.apple.id);
+      expect(order.getDetails().size).toBe(0);
+      expect(order.getDetail(fruitStorage.apple.id)).toBeUndefined();
+    });
+
+    test('Total price is 0', () => {
+      expect(order.getTotal()).toBe(0);
+    });
+  });
+
+  describe('Order has more one product', () => {
+    const order = new Order();
+
+    test('Add 4 apples', () => {
+      order.addFruit(new Fruit(fruitStorage.apple), 4);
+      expect(order.getDetails().size).toBe(1);
+      expect(order.getDetail(fruitStorage.apple.id)).not.toBeUndefined();
+      expect(order.getDetail(fruitStorage.apple.id).quantity).toBe(4);
+    });
+
+    test('Total price is 90000', () => {
+      expect(order.getTotal()).toBe(90000);
+    });
+
+    test('Add more 2 orange', () => {
+      order.addFruit(new Fruit(fruitStorage.orange), 1);
+      expect(order.getDetails().size).toBe(2);
+      expect(order.getDetail(fruitStorage.orange.id)).not.toBeUndefined();
+      expect(order.getDetail(fruitStorage.orange.id).quantity).toBe(1);
+    });
+
+    test('Total price is 109400', () => {
+      expect(order.getTotal()).toBe(109400);
+    });
+
+    test('Update quantity of orange to 4', () => {
+      order.updateFruit(new Fruit(fruitStorage.orange), 4);
+      expect(order.getDetails().size).toBe(2);
+      expect(order.getDetail(fruitStorage.orange.id)).not.toBeUndefined();
+      expect(order.getDetail(fruitStorage.orange.id).quantity).toBe(4);
+    });
+
+    test('Total price is 164400', () => {
+      expect(order.getTotal()).toBe(164400);
+    });
+
+    test('Remove apple in order', () => {
+      order.removeFruit(fruitStorage.apple.id);
+      expect(order.getDetails().size).toBe(1);
+      expect(order.getDetail(fruitStorage.apple.id)).toBeUndefined();
+    });
+
+    test('Total price is 74400', () => {
+      expect(order.getTotal()).toBe(74400);
     });
   });
 });
