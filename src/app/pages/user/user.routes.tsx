@@ -8,19 +8,19 @@ const UserList = React.lazy(() => import('./UserList'));
 
 const userRoutes: PageRoute[] = [
   {
-    path: '/',
+    path: 'users',
     element: Users,
     children: [
       {
-        path: 'users',
-        element: UserList,
+        path: '',
+        element: UserList
       },
       {
-        path: 'users/:id',
-        element: UserDetail,
-      },
-    ],
-  },
+        path: ':id',
+        element: UserDetail
+      }
+    ]
+  }
 ];
 
 export default userRoutes;

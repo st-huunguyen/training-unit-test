@@ -3,7 +3,7 @@ import { Outlet } from 'react-router-dom';
 
 const Page = () => {
   return (
-    <div className="pages-container">
+    <div className='pages-container'>
       Page component works!
       <Outlet />
     </div>
